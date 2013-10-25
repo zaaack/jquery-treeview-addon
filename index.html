@@ -1,0 +1,76 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>jquery-treeview-addon</title>
+<!--jquery-->
+<script type="text/javascript" src="./jquerytreeview/jquery.js"></script>
+
+
+<!--treeview-->
+<link href="./jquerytreeview/jquery.treeview.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="./jquerytreeview/jquery.treeview.js"></script>
+<script type="text/javascript" src="./jquerytreeview/jquery.cookie.js"></script>
+
+
+<!--treeview-addon-->
+<link href="./treeviewaddon/treeview.addon.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="./treeviewaddon/treeview.addon.js"></script>
+
+
+<script type="text/javascript">
+	//[{"1":{"checked":true,"text":"Item1","children":[{"2":{"checked":true,"text":"Item2","children":[]}}]}}]
+	var jsonArrayStr="[{\"1\":{\"checked\":true,\"text\":\"Item1\",\"children\":[{\"2\":{\"checked\":true,\"text\":\"Item2\",\"children\":[]}},{\"3\":{\"checked\":false,\"text\":\"Item3\",\"children\":[]}}]}}]";
+	var jsonArray=eval("("+jsonArrayStr+")");
+$(function(){
+	$(".treeview").treeview_addon({
+			//jsonArray:jsonArray,
+			//inputType:"checkbox",/*you can choose checkbox,radio. if you don't want input support, you can write false*/
+			inputName:"zyCatalog",
+			leaveTag:"span",/*just like the treeview support, you can use a or span, */
+			partCheckedImageSrc:"./images/partChecked.jpg"
+	});
+});
+</script>
+
+</head>
+
+<body>
+	<ul id="zyCatalogTree" class="treeview">
+                        <li class="expandable lastExpandable"><div class="hitarea expandable-hitarea lastExpandable-hitarea"></div><input type="checkbox" name="zyCatalog" class=""><span class="hover">Item 1</span>
+                <ul style="display: none;">
+                    <li class="expandable"><div class="hitarea expandable-hitarea"></div>
+                    	<input type="checkbox" name="zyCatalog"><span>Item 1.</span>
+                        <ul style="display: none;">
+                            <li class="last"><input type="checkbox" name="zyCatalog"><span>Item 1.0.</span></li>
+                        </ul>
+                    </li>
+                    <li><input type="checkbox" name="zyCatalog"><span>Item 1.</span></li>
+                    <li class="expandable lastExpandable"><div class="hitarea expandable-hitarea lastExpandable-hitarea"></div><input type="checkbox" name="zyCatalog"><span>Item 1.</span>
+                        <ul style="display: none;">
+                            <li class="expandable"><div class="hitarea expandable-hitarea"></div><input type="checkbox" name="zyCatalog"><span>Item 1.2.</span>
+                            <ul style="display: none;">
+                                <li><input type="checkbox" name="zyCatalog"><span>Item 1.2.0.</span></li>
+                                <li><input type="checkbox" name="zyCatalog"><span>Item 1.2.0.</span></li>
+                                <li class="last"><input type="checkbox" name="zyCatalog"><span>Item 1.2.0.</span></li>
+                            </ul>
+                        </li>
+                            <li class="expandable"><div class="hitarea expandable-hitarea"></div><input type="checkbox" name="zyCatalog"><span>Item 1.2.</span>
+                            <ul style="display: none;">
+                                <li class="last"><input type="checkbox" name="zyCatalog"><span>Item 1.2.1.</span></li>
+                            </ul>
+                        </li>
+                            <li class="expandable lastExpandable"><div class="hitarea expandable-hitarea lastExpandable-hitarea"></div><input type="checkbox" name="zyCatalog"><span>Item 1.2.</span>
+                            <ul style="display: none;">
+                                <li><input type="checkbox" name="zyCatalog"><span>Item 1.2.2.</span></li>
+                                <li><input type="checkbox" name="zyCatalog"><span>Item 1.2.2.</span></li>
+                                <li class="last"><input type="checkbox" name="zyCatalog"><span>Item 1.2.2.</span></li>
+                            </ul>
+                        </li>
+                        </ul>
+                    </li>
+                </ul>
+            </li>
+                    </ul>
+</body>
+</html>
