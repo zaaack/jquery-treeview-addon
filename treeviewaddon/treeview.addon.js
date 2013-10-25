@@ -65,7 +65,6 @@
 			})
 			
 			if(options.inputType=="checkbox"){
-			
 				var inputs=$this.find("li input:"+options.inputType);
 				inputs.click(function(e){
 					updateCheckBoxStates($(this));
@@ -122,14 +121,18 @@
 			
 			function updateCheckBoxStates($this)
 			{
-				if($this.attr("checked")=="checked")
+				if($this.attr("checked")=="checked"||$this.attr("checked")==true)
 				{
 					//update lower chechbox's states
-					$this.nextAll("ul").find("input:"+options.inputType).attr("checked",true);
+					$this.nextAll("ul").find("input:"+options.inputType).attr("checked",true)
+						.css("display","inline").next("img").remove();
 					//update upper chechbox's states
 					updateCheckBoxParentsStates($this);
 				}else{
-					$this.nextAll("ul").find("input:"+options.inputType).attr("checked",false);
+					//update lower chechbox's states
+					$this.nextAll("ul").find("input:"+options.inputType).attr("checked",false)
+						.next("img").css("display","inline").remove();
+					//update upper chechbox's states
 					updateCheckBoxParentsStates($this);
 				}
 			}
@@ -145,7 +148,7 @@
 					var allChecked=true;
 					var allNotChecked=true;
 					children.each(function(ind){
-						if(children.eq(ind).attr("checked")=="checked"){
+						if(children.eq(ind).attr("checked")=="checked"||children.eq(ind).attr("checked")==true){
 							allNotChecked=false;
 						}else{
 							allChecked=false;
@@ -154,27 +157,28 @@
 					if(allChecked){
 						parent.attr("checked",true);
 
-							if(parent.next().is("img")){
-								parent.css("display","inline").next("img").remove();
-							}
+						if(parent.next().is("img")){
+							parent.css("display","inline").next("img").remove();
+						}
 					}else if(allNotChecked){
 						parent.attr("checked",false);
-							if(parent.next().is("img")){
-								parent.css("display","inline").next("img").remove();
-							}
+						if(parent.next().is("img")){
+							parent.css("display","inline").next("img").remove();
+						}
 					}else{
 						parent.attr("checked",false);
 						if(!parent.next().is("img")){
-							parent.css("display","none").after("<img src='"+options.partCheckedImageSrc+"' class='partChecked' />")
-								.next("img").click(function(){
-									parent.click();
-									if(parent.attr("checked")=="checked"){
-										parent.css("display","inline").next("img").remove();
-									}else{
-										parent.css("display","none").after("<img src='"+options.partCheckedImageSrc+"' class='partChecked' />");
-									}
-									updateCheckBoxStates(parent);
-								});
+							parent.css("display","none").after("<img src='"+options.partCheckedImageSrc+"' class='partChecked' />");
+							parent.next("img").click(function(){
+								var partCheckedBox=$(this).prev("input:checkbox");
+								partCheckedBox.click();
+								if(partCheckedBox.attr("checked")=="checked"||partCheckedBox.attr("checked")==true){
+									partCheckedBox.css("display","inline").next("img").remove();
+								}else{
+									partCheckedBox.css("display","none").after("<img src='"+options.partCheckedImageSrc+"' class='partChecked' />");
+								}
+								updateCheckBoxStates(partCheckedBox);
+							});
 						}
 						//css("background","url(./images/partChecked.jpg)");
 					}
