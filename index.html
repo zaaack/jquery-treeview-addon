@@ -21,13 +21,15 @@
 <script type="text/javascript">
 	//[{"1":{"checked":true,"text":"Item1","children":[{"2":{"checked":true,"text":"Item2","children":[]}}]}}]
 	var jsonArrayStr="[{\"1\":{\"checked\":true,\"text\":\"Item1\",\"children\":[{\"2\":{\"checked\":true,\"text\":\"Item2\",\"children\":[]}},{\"3\":{\"checked\":false,\"text\":\"Item3\",\"children\":[]}}]}}]";
+	
 	var jsonArray=eval("("+jsonArrayStr+")");
+	
 $(function(){
 	$(".treeview").treeview_addon({
 			//jsonArray:jsonArray,
 			inputType:"checkbox",/*you can choose checkbox,radio. if you don't want input support, you can write false or don't write it*/
 			inputName:"zyCatalog",
-			leaveTag:"span",/*just like the treeview support, you can use a or span, */
+			leavesTag:"span",/*just like the treeview, you can use "a" or "span" when you are using a jsonArray to create the tree */
 			partCheckedImageSrc:"./treeviewaddon/partChecked.jpg"
 	});
 });

@@ -3,26 +3,25 @@
  *2013-10-25 20:56
  *E-mail:464631487@qq.com
  */
+
 ;(function($) {
 
 	$.extend($.fn, {
 		treeview_addon:function(options){
 			var defaults = {
 				jsonArray : null,
+				jsonUrl:"",//通过url获取json数据，暂时未完成。
 					/*in the jsonArray,the key of json will become the a tag's href or the value of the input tag, 
-						and the value is also a json data made by three key-value, "checked"(bool,the state of checkbox or radio)
-						 , "text"(string,the display text of the tree's leaves) and "children"(jsonArray,the children of this 
+						and the value is also a json data made by two key-value, "text"(string,the display text of the tree's leaves) and "children"(jsonArray,the children of this 
 						 branch).
 					eg.	 [
 							{
 								"1":{
-									"checked":true,
 									"text":"Item1",
 									"children":
 										[
 											{
 												"2":{
-														"checked":true,
 														"text":"Item2",
 														"children":[]
 													}
@@ -35,14 +34,15 @@
 				inputType:false,/*you can choose checkbox,radio. if you don't want input support, you can write false*/
 				inputName:false,
 				leavesTag:"span",/*just like the treeview support, you can use a or span, */
-				aHref:"",/* if leavesTag=="a", this is the href of the "a", else it is useless*/
+				folderAHref:"",/*文件夹的链接，未完成*/
+				fileAhref:"",/*文件的链接，未完成*/
+				checkedArray:[],/*已经选择的列表，数组的元素是checkbox的value值。正在完成。。*/
+					
 				partCheckedImageSrc:"./treeviewaddon/partChecked.jpg",
 				
 				
 				
-				/*properties below belong to jquery.treeview
-				you can find demos in http://jquery.bassistance.de/treeview/demo/
-				*/
+				/*properties below belong to jquery.treeview*/
 				
 				control: null,
 				animated: "fast",
@@ -64,18 +64,31 @@
 				toggle: options.toggle
 			})
 			
+			/*初始化已经选择的input标签*/
+			if(options.checkedArray.length>0){
+				for(var i in options.checkedArray){
+					$this.find("li input[value='"+options.checkedArray[i]+"']").attr("checked",true);
+				}
+			}
 			if(options.inputType=="checkbox"){
-				var inputs=$this.find("li input:"+options.inputType);
+			
+				var inputs=$this.find("input:"+options.inputType);
 				inputs.click(function(e){
 					updateCheckBoxStates($(this));
 				}).each(function(index, element) {
-					updateCheckBoxParentsStates(inputs.eq(index));
+					var input=inputs.eq(index);
+					if(input.nextAll("ul").length==0){
+						updateCheckBoxParentsStates(input);
+					}
 				});
 			}
 			
 			
 			function getTreeHtml(jsonArray){
 				var treeHtml="";
+
+				recurseTreeHtml(jsonArray);
+				return treeHtml;
 				
 				function recurseTreeHtml(jsonArray){
 					
@@ -92,9 +105,6 @@
 							if(options.inputName){
 								treeHtml+=" name=\""+options.inputName+"\"";
 								treeHtml+=" value=\""+value+"\"";
-								if(treeItem.checked){
-									treeHtml+=" checked=\"checked\"";
-								}
 							}
 							treeHtml+=" />";
 						}
@@ -115,8 +125,6 @@
 					}		
 				};
 				
-				recurseTreeHtml(jsonArray);
-				return treeHtml;
 			}
 			
 			function updateCheckBoxStates($this)
@@ -156,37 +164,30 @@
 					});
 					if(allChecked){
 						parent.attr("checked",true);
-
-						if(parent.next().is("img")){
-							parent.css("display","inline").next("img").remove();
-						}
+							if(parent.next().is("img")){
+								parent.css("display","inline").next("img").remove();
+							}
 					}else if(allNotChecked){
 						parent.attr("checked",false);
-						if(parent.next().is("img")){
-							parent.css("display","inline").next("img").remove();
-						}
+							if(parent.next().is("img")){
+								parent.css("display","inline").next("img").remove();
+							}
 					}else{
 						parent.attr("checked",false);
 						if(!parent.next().is("img")){
-							parent.css("display","none").after("<img src='"+options.partCheckedImageSrc+"' class='partChecked' />");
-							parent.next("img").click(function(){
-								var partCheckedBox=$(this).prev("input:checkbox");
-								partCheckedBox.click();
-								if(partCheckedBox.attr("checked")=="checked"||partCheckedBox.attr("checked")==true){
-									partCheckedBox.css("display","inline").next("img").remove();
-								}else{
-									partCheckedBox.css("display","none").after("<img src='"+options.partCheckedImageSrc+"' class='partChecked' />");
-								}
-								updateCheckBoxStates(partCheckedBox);
-							});
+							parent.css("display","none").after("<img src='"+options.partCheckedImageSrc+"' class='partChecked' />")
+								.next("img").click(function(){
+									parent.click();
+									if(parent.attr("checked")=="checked"||parent.attr("checked")==true){
+										parent.css("display","inline").next("img").remove();
+									}else{
+										parent.css("display","none").after("<img src='"+options.partCheckedImageSrc+"' class='partChecked' />");
+									}
+									updateCheckBoxStates(parent);
+								});
 						}
 						//css("background","url(./images/partChecked.jpg)");
 					}
-					/*if(childrenAllChecked(parent)){
-						parent.attr("checked",true);
-					}else if(childrenAllNotChecked(parent)){
-						parent.attr("checked",false).css();
-					}*/
 				}
 						
 			}
